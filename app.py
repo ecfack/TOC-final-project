@@ -8,13 +8,13 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
 from fsm import TocMachine
-from utils import send_text_message
+from utils import send_text_message,send_main_menu_message
 
 load_dotenv()
 
 
 machine = TocMachine(
-    states=["user", "state1", "state2"],
+    states=["user", "state1", "state2","state3","state4","state5","state6","state7"],
     transitions=[
         {
             "trigger": "advance",
@@ -28,7 +28,41 @@ machine = TocMachine(
             "dest": "state2",
             "conditions": "is_going_to_state2",
         },
-        {"trigger": "go_back", "source": ["state1", "state2"], "dest": "user"},
+        {
+            "trigger": "advance",
+            "source": "user",
+            "dest": "state3",
+            "conditions": "is_going_to_state3",
+        },
+        {
+            "trigger": "advance",
+            "source": "user",
+            "dest": "state4",
+            "conditions": "is_going_to_state4",
+        },
+        {
+            "trigger": "advance",
+            "source": "user",
+            "dest": "state5",
+            "conditions": "is_going_to_state5",
+        },
+        {
+            "trigger": "advance",
+            "source": "user",
+            "dest": "state6",
+            "conditions": "is_going_to_state6",
+        },
+        {
+            "trigger": "advance",
+            "source": "user",
+            "dest": "state7",
+            "conditions": "is_going_to_state7",
+        },
+        {
+            "trigger": "go_back", 
+            "source": ["state1", "state2","state3","state4","state5","state6","state7"], 
+            "dest": "user"
+        },
     ],
     initial="user",
     auto_transitions=False,
@@ -104,7 +138,8 @@ def webhook_handler():
         print(f"REQUEST BODY: \n{body}")
         response = machine.advance(event)
         if response == False:
-            send_text_message(event.reply_token, "Not Entering any State")
+            send_main_menu_message(event.reply_token)
+            # send_text_message(event.reply_token, "Not Entering any State")
     return "OK"
 
 
