@@ -1,6 +1,6 @@
 from transitions.extensions import GraphMachine
 import datetime
-from utils import send_text_message
+from utils import send_text_message,send_image_url
 import crawler
 
 
@@ -50,6 +50,18 @@ class TocMachine(GraphMachine):
     def is_going_to_state7(self, event):
         text = event.message.text
         if "日落" == text:
+          return True  
+        return False
+    
+    def is_going_to_state8(self, event):
+        text = event.message.text
+        if "FSM" == text:
+          return True  
+        return False
+    
+    def is_going_to_state9(self, event):
+        text = event.message.text
+        if "還說不能傳空訊息" == text:
           return True  
         return False
 
@@ -126,10 +138,18 @@ class TocMachine(GraphMachine):
         text=str(text).strip(" ")
         tasks=text.split(" ")
 
-        #刪除tasks
-        for task in tasks:
-            if task in self.user_data[uid]:
-                del self.user_data[uid][task]
+        if(len(text)):
+            #刪除tasks
+            if(text[0]=="*"):
+                self.user_data[uid]=dict()
+            else:
+                delelte_list=[]
+                for task in tasks:
+                    for key,value in self.user_data[uid].items():
+                        if value == int(task):
+                            delelte_list.append(key)
+                for key in delelte_list:
+                    del self.user_data[uid][key]
         
         #重新排序
         i=1
@@ -229,5 +249,23 @@ class TocMachine(GraphMachine):
         send_text_message(reply_token, output_str)
         self.go_back()
 
-    def on_exit_state5(self):
-        print("Leaving state5")
+    def on_exit_state7(self):
+        print("Leaving state7")
+    
+    def on_enter_state8(self, event):   #FSM
+        print("I'm entering state8")
+        reply_token = event.reply_token
+        send_image_url(reply_token, "https://6294-2001-b400-e73c-9a73-a550-6d9a-effb-247b.ngrok.io/show-fsm")
+        self.go_back()
+
+    def on_exit_state8(self):
+        print("Leaving state8")
+    
+    def on_enter_state9(self, event):   #可憐啊
+        print("I'm entering state9")
+        reply_token = event.reply_token
+        send_image_url(reply_token,"https://memeprod.sgp1.digitaloceanspaces.com/meme/a9a16134b16c3a8d71fbd3ea723f9efe.png")
+        self.go_back()
+
+    def on_exit_state9(self):
+        print("Leaving state9")
