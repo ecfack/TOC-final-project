@@ -2,71 +2,72 @@ from transitions.extensions import GraphMachine
 import datetime
 from utils import send_text_message,send_image_url
 import crawler
+import os
 
 
 class TocMachine(GraphMachine):
     def __init__(self, **machine_configs):
         self.machine = GraphMachine(model=self, **machine_configs)
         self.user_data=dict()
-    def is_going_to_state1(self, event):
+    def is_going_to_create_state(self, event):
         text = event.message.text
 
         if "增" == text[0]:
           return True  
         return False
-        # return text.lower() == "go to state1"
+        # return text.lower() == "go to create_state"
 
-    def is_going_to_state2(self, event):
+    def is_going_to_read_state(self, event):
         text = event.message.text
         if "查" == text[0]:
           return True  
         return False
-        # return text.lower() == "go to state2"
+        # return text.lower() == "go to read_state"
 
-    def is_going_to_state3(self, event):
+    def is_going_to_delete_state(self, event):
         text = event.message.text
         if "刪" == text[0]:
           return True  
         return False
 
-    def is_going_to_state4(self, event):
+    def is_going_to_update_state(self, event):
         text = event.message.text
         if "改" == text[0]:
           return True  
         return False
     
-    def is_going_to_state5(self, event):
+    def is_going_to_sunrise_state(self, event):
         text = event.message.text
         if "日出" == text:
           return True  
         return False
     
-    def is_going_to_state6(self, event):
+    def is_going_to_explain_state(self, event):
         text = event.message.text
         if "解說" == text[0:2]:
           return True  
         return False
     
-    def is_going_to_state7(self, event):
+    def is_going_to_sunset_state(self, event):
         text = event.message.text
         if "日落" == text:
           return True  
         return False
     
-    def is_going_to_state8(self, event):
+    def is_going_to_FSM_state(self, event):
         text = event.message.text
         if "FSM" == text:
           return True  
         return False
     
-    def is_going_to_state9(self, event):
+    def is_going_to_murmur_state(self, event):
         text = event.message.text
         if "還說不能傳空訊息" == text:
           return True  
         return False
 
-    def on_enter_state1(self, event):   #增 new_task1 new_task2...
-        print("I'm entering state1")
+    def on_enter_create_state(self, event):   #增 new_task1 new_task2...
+        print("I'm entering create_state")
 
         #從event抓資料
         text = event.message.text
@@ -96,11 +97,11 @@ class TocMachine(GraphMachine):
         send_text_message(reply_token, output_str)
         self.go_back()
 
-    def on_exit_state1(self):
-        print("Leaving state1")
+    def on_exit_create_state(self):
+        print("Leaving create_state")
 
-    def on_enter_state2(self, event):   #查
-        print("I'm entering state2")
+    def on_enter_read_state(self, event):   #查
+        print("I'm entering read_state")
 
         #從event抓資料
         reply_token = event.reply_token
@@ -118,11 +119,11 @@ class TocMachine(GraphMachine):
         send_text_message(reply_token, output_str)
         self.go_back()
 
-    def on_exit_state2(self):
-        print("Leaving state2")
+    def on_exit_read_state(self):
+        print("Leaving read_state")
     
-    def on_enter_state3(self, event):   #刪 old_tasks1 old_tasks2...
-        print("I'm entering state3")
+    def on_enter_delete_state(self, event):   #刪 old_tasks1 old_tasks2...
+        print("I'm entering delete_state")
 
         #從event抓資料
         text = event.message.text
@@ -166,11 +167,11 @@ class TocMachine(GraphMachine):
         send_text_message(reply_token, output_str)
         self.go_back()
 
-    def on_exit_state3(self):
-        print("Leaving state3")
+    def on_exit_delete_state(self):
+        print("Leaving delete_state")
 
-    def on_enter_state4(self, event):   #改 old_task new_task
-        print("I'm entering state4")
+    def on_enter_update_state(self, event):   #改 old_task new_task
+        print("I'm entering update_state")
 
         #從event抓資料
         text = event.message.text
@@ -204,11 +205,11 @@ class TocMachine(GraphMachine):
         send_text_message(reply_token, output_str)
         self.go_back()
 
-    def on_exit_state4(self):
-        print("Leaving state4")
+    def on_exit_update_state(self):
+        print("Leaving update_state")
     
-    def on_enter_state5(self, event):   #日出
-        print("I'm entering state5")
+    def on_enter_sunrise_state(self, event):   #日出
+        print("I'm entering sunrise_state")
 
         #從event抓資料
         reply_token = event.reply_token
@@ -223,18 +224,18 @@ class TocMachine(GraphMachine):
         send_text_message(reply_token, output_str)
         self.go_back()
 
-    def on_exit_state5(self):
-        print("Leaving state5")
+    def on_exit_sunrise_state(self):
+        print("Leaving sunrise_state")
     
-    def on_enter_state6(self, event):   #解說指令
-        print("I'm entering state6")
+    def on_enter_explain_state(self, event):   #解說指令
+        print("I'm entering explain_state")
         self.go_back()
 
-    def on_exit_state6(self):
-        print("Leaving state6")
+    def on_exit_explain_state(self):
+        print("Leaving explain_state")
 
-    def on_enter_state7(self, event):   #日落
-        print("I'm entering state5")
+    def on_enter_sunset_state(self, event):   #日落
+        print("I'm entering sunset_state")
 
         #從event抓資料
         reply_token = event.reply_token
@@ -249,23 +250,24 @@ class TocMachine(GraphMachine):
         send_text_message(reply_token, output_str)
         self.go_back()
 
-    def on_exit_state7(self):
-        print("Leaving state7")
+    def on_exit_sunset_state(self):
+        print("Leaving sunset_state")
     
-    def on_enter_state8(self, event):   #FSM
-        print("I'm entering state8")
+    def on_enter_FSM_state(self, event):   #FSM
+        print("I'm entering FSM_state")
         reply_token = event.reply_token
-        send_image_url(reply_token, "https://6294-2001-b400-e73c-9a73-a550-6d9a-effb-247b.ngrok.io/show-fsm")
+        HOST_IP= os.environ.get("HOST_NAME", "0.0.0.1")
+        send_image_url(reply_token, HOST_IP+"/show-fsm")
         self.go_back()
 
-    def on_exit_state8(self):
-        print("Leaving state8")
+    def on_exit_FSM_state(self):
+        print("Leaving FSM_state")
     
-    def on_enter_state9(self, event):   #可憐啊
-        print("I'm entering state9")
+    def on_enter_murmur_state(self, event):   #可憐啊
+        print("I'm entering murmur_state")
         reply_token = event.reply_token
         send_image_url(reply_token,"https://memeprod.sgp1.digitaloceanspaces.com/meme/a9a16134b16c3a8d71fbd3ea723f9efe.png")
         self.go_back()
 
-    def on_exit_state9(self):
-        print("Leaving state9")
+    def on_exit_murmur_state(self):
+        print("Leaving murmur_state")

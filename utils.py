@@ -76,7 +76,7 @@ def send_main_menu_message(reply_token):
                         ),
                         MessageTemplateAction(
                             label='LINE說不塞這欄就吃error',
-                            text='還說不能傳空訊息'
+                            text='也不能傳空訊息'
                         )
                     ]
                 ),
