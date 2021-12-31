@@ -5,10 +5,10 @@ from flask import Flask, jsonify, request, abort, send_file
 from dotenv import load_dotenv
 from linebot import LineBotApi, WebhookParser
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from linebot.models import MessageEvent, TextMessage, TextSendMessage, FollowEvent
 
 from fsm import TocMachine
-from utils import send_text_message,send_main_menu_message
+from utils import send_text_message,send_main_menu_message,send_greeting_message
 
 load_dotenv()
 
@@ -140,6 +140,9 @@ def webhook_handler():
 
     # if event is MessageEvent and message is TextMessage, then echo text
     for event in events:
+        if isinstance(event,FollowEvent):
+            send_greeting_message(event.reply_token)
+            continue
         if not isinstance(event, MessageEvent):
             continue
         if not isinstance(event.message, TextMessage):

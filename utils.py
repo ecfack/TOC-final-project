@@ -38,7 +38,7 @@ def send_main_menu_message(reply_token):
                 CarouselColumn(
                     thumbnail_image_url='https://i.imgur.com/dmVCLQx.jpg',
                     title='改查備忘錄功能',
-                    text='改動及查詢備忘錄說明',
+                    text='毫無反應，就只是改動及查詢備忘錄的功能說明',
                     actions=[
                         MessageTemplateAction(
                             label='更新項目指令',
@@ -96,3 +96,25 @@ def send_image_url(reply_token, img_url):
 def send_button_message(id, text, buttons):
     pass
 """
+
+def send_greeting_message(reply_token):
+    buttons_template = TemplateSendMessage(
+        alt_text='Buttons Template',
+        template=ButtonsTemplate(
+            title='這裡是bot',
+            text='主要功能是簡單備忘錄，\n請送出任何訊息或以下按鈕以開啟主選單',
+            thumbnail_image_url='https://memeprod.sgp1.digitaloceanspaces.com/user-wtf/1638328309684.jpg',
+            actions=[
+                MessageTemplateAction(
+                    label='早安您好，平安喜樂',
+                    text='早安您好，平安喜樂'
+                ),
+                MessageTemplateAction(
+                    label='恩，你說的沒錯',
+                    text='恩，你說的沒錯'
+                )
+            ]
+        )
+    )
+    line_bot_api = LineBotApi(channel_access_token)
+    line_bot_api.reply_message(reply_token, buttons_template)

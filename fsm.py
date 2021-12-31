@@ -62,7 +62,7 @@ class TocMachine(GraphMachine):
     
     def is_going_to_murmur_state(self, event):
         text = event.message.text
-        if "還說不能傳空訊息" == text:
+        if "也不能傳空訊息" == text:
           return True  
         return False
 
