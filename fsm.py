@@ -220,9 +220,9 @@ class TocMachine(GraphMachine):
 
                     pipe=self.r.pipeline()
                     for task_num in tasks:
-                        for task_pair in output_tasks:
-                            if task_pair[1] == int(task_num):
-                                self.r.hdel(uid,task_pair[0])
+                        for i in range(0, len(output_tasks)):
+                            if i+1 == int(task_num):
+                                pipe.hdel(uid,output_tasks[i][0])
                                 break
                     pipe.execute()
         except:
@@ -274,17 +274,17 @@ class TocMachine(GraphMachine):
                 new_task = tasks[1]
 
                 if self.r.hexists(uid,old_task):
-                    pipe=self.r.pipeline()
                     timestamp = self.r.hget(uid,old_task)
+                    pipe=self.r.pipeline()
                     self.r.hdel(uid,old_task)
-                    self.r.hset(uid,old_task,timestamp)
+                    self.r.hset(uid,new_task,timestamp)
                     pipe.execute()
         except:
             pass
         finally:
             # 打印tasks
             output_tasks = self.r.hgetall(uid)
-            output_tasks = sorted(self.r[uid].items(), key=lambda x: x[1])
+            output_tasks = sorted(output_tasks.items(), key=lambda x: x[1])
             output_str = "修改成功!!\nTask:"
 
             for i in range(0, len(output_tasks)):
@@ -381,7 +381,7 @@ class TocMachine(GraphMachine):
         HOST_IP = os.environ.get("HOST_NAME", "0.0.0.1")
 
         try:
-            send_image_url(reply_token, HOST_IP+"/show-fsm")
+            send_text_message(reply_token, HOST_IP+"/show-fsm")
         except:
             pass
         finally:
